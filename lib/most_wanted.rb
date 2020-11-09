@@ -1,6 +1,7 @@
-require "most_wanted/version"
+require 'pry'
 
-module MostWanted
-  class Error < StandardError; end
-  # Your code goes here...
-end
+require_relative './most_wanted/version.rb'
+require_relative './most_wanted/cli.rb'
+require_relative './most_wanted/api.rb'
+require_relative './most_wanted/wanted.rb'
+
