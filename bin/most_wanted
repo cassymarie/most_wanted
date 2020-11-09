@@ -3,6 +3,6 @@
 require './lib/most_wanted.rb'
 
 
-# binding.pry
+
 
 MostWanted::CLI.new.call

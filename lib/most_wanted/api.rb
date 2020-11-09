@@ -20,7 +20,7 @@ class Api
      end
 
      def create_wanted
-          total_pages = (@@total/20).ceil
+          total_pages = ((@@total/20)/2.0).ceil
           page = 1
           while page <= total_pages do 
                page_parse(page)["items"].each do |criminal|
