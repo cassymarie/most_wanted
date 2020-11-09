@@ -12,7 +12,7 @@ class Wanted
 
      def self.list_names
           self.all.collect do |bad_guy|
-               bad_guy["title"]
+               bad_guy.title.split(' ').collect{|x| x.downcase}.collect{|x| x.capitalize}.join(' ')
           end
      end
 

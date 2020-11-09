@@ -1,10 +1,9 @@
 
-
-
 class MostWanted::CLI
 TYPES = ['Murder','Crimes Against Children','Cyber','White Collar Crimes','Counterintelligence','Human Trafficking','Additional Violent Crimes','Terrorism','Kidnappings & Missing Persons']
 
      def call
+          Api.new
           puts "Welcome to FBI Most Wanted list"
           puts "--------------------------------\n"
           list_main_menu
@@ -25,9 +24,7 @@ TYPES = ['Murder','Crimes Against Children','Cyber','White Collar Crimes','Count
           if input_idx > 0 && user_input != 'exit'
                case input_idx
                when 1
-                    MostWanted::API.new.create_wanted
-                    
-
+                    list_wanted
                when 2..TYPES.size
                     puts "You choose: #{TYPES[input_idx -1]}"
                end
@@ -37,12 +34,9 @@ TYPES = ['Murder','Crimes Against Children','Cyber','White Collar Crimes','Count
      end
 
      def list_wanted
-          #Puts a list of criminals
-     #     puts <<-DOC.gsub(/^\s*/, '')
-     #       -- List of Criminals
-     #           1. Guy 1 - type - 
-     #           2. Guy 2 - type - 
-     #      DOC
+          Wanted.list_names.each_with_index do |each, i|
+               puts "#{i+1}. #{each}"
+          end
      end
 
      def adios
