@@ -5,7 +5,7 @@ class Api
 
      def initialize
           @@total = page_parse["total"]
-          create_wanted
+          create_objects
      end
 
      def self.total 
@@ -19,12 +19,14 @@ class Api
           full_list = JSON.parse(response)
      end
 
-     def create_wanted
+     def create_objects
           total_pages = ((@@total/20)/2.0).ceil
           page = 1
           while page <= total_pages do 
                page_parse(page)["items"].each do |criminal|
-                    Wanted.new(criminal)
+                   newPerson = Person.new(criminal)
+                   newCase = Case.new(criminal)
+                   newCase.individual = newPerson
                end
                page += 1
           end

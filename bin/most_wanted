@@ -2,7 +2,4 @@
 
 require './lib/most_wanted.rb'
 
-
-
-
-MostWanted::CLI.new.call
+MostWanted::CLI.new.start

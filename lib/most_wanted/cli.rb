@@ -2,7 +2,7 @@
 class MostWanted::CLI
 TYPES = ['Murder','Crimes Against Children','Cyber','White Collar Crimes','Counterintelligence','Human Trafficking','Additional Violent Crimes','Terrorism','Kidnappings & Missing Persons']
 
-     def call
+     def start
           Api.new
           welcome
      end
@@ -19,7 +19,6 @@ TYPES = ['Murder','Crimes Against Children','Cyber','White Collar Crimes','Count
 
 
      def list_main_menu
-          # puts "Enter a number to view specific Category List\n"
           TYPES.each_with_index do |type, i|
                puts "#{i+1}. #{type}"
           end
@@ -48,7 +47,7 @@ TYPES = ['Murder','Crimes Against Children','Cyber','White Collar Crimes','Count
           index = from -1
           puts "\n Wanted Murders [Page: #{page} | #{from} - #{to})]"
           while from <= to
-               puts "   #{from}. #{Wanted.list_names[from-1]}"
+               puts "   #{from}. #{Person.list_names[from-1]}"
                from +=1
           end
           nav_options(page)

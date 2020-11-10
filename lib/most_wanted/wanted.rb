@@ -18,7 +18,7 @@ class Wanted
      end
 
      def self.classifications
-          self.all.collect {|person| person.person_classificaiton}.uniq
+          self.all.collect {|person| person['person_classification']}.uniq
      end
 
      def self.total_att
