@@ -1,38 +1,47 @@
-class Wanted
-@@all = []
-@@attr = []
+module Wanted
 
-     def initialize(attributes)
-          attributes.each do |key, value| 
-              key = "wanted_id" if key == "@id"
-          self.class.attr_accessor(key.to_sym)
-          self.send(("#{key}="), value)
+     module ClassMethods
+
+          def self.total_att
+               attr_by_class = []
+               self.all.each do |attr|
+                    attr.instance_variables.each {|var| attr_by_class << var unless attr_by_class.include?(var)}
+               end
+               attr_by_class.sort!{|a,b| a <=> b}
           end
-          self.class.all << self
+
      end
 
-     def self.list_names
-          self.all.collect do |bad_guy|
-               bad_guy.title.split(' ').collect{|x| x.downcase}.collect{|x| x.capitalize}.join(' ')
+     module InstanceMethods
+
+          def initialize(fbi_hash)
+
+               self.class.setup_attributes.each do |attr|
+          
+                    self.class.attr_accessor(attr.to_sym)
+                    attr2 = case attr
+                         when "age","weight","height"
+                              "_max"
+                         when "eyes", "hair", "race"
+                              "_raw"
+                         else
+                              ""
+                    end
+                    self.send(("#{attr}="), fbi_hash["#{attr}#{attr2}"])
+               end
+               self.class.all << self
           end
-     end
-
-     def self.classifications
-          self.all.collect {|person| person['person_classification']}.uniq
-     end
-
-     def self.total_att
-          self.all.each do |attr|
-               attr.instance_variables.each {|var| @@attr << var unless @@attr.include?(var)}
+          
+          def make_word_upcase(words)
+               words.gsub(/\w+/) {|word| word.capitalize}
           end
-          @@attr.sort!{|a,b| a <=> b}
-     end
-
-     def self.all
-          @@all
-     end
-
-     def self.attributes
-          @@attr
      end
 end
+
+
+
+
+
+
+
+

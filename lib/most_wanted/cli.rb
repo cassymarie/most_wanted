@@ -2,32 +2,69 @@
 class MostWanted::CLI
 TYPES = ['Murder','Crimes Against Children','Cyber','White Collar Crimes','Counterintelligence','Human Trafficking','Additional Violent Crimes','Terrorism','Kidnappings & Missing Persons']
 
+
      def start
-          Api.new
           welcome
+          about
+          Api.new
+          # binding.pry
+          list_main_menu
+          user_selection
+          
      end
 
      def welcome
-
-          puts "\n-----------------------------------"
-          puts "   **** FBI Wanted Lists ****"
-          puts "-----------------------------------\n\n"
-
-          list_main_menu
-          user_selection
+          puts "\n****************************************".colorize(:blue)
+          puts "        _______ ______  _____".colorize(:white)
+          puts "        |______ |_____]   |  ".colorize(:white)
+          puts "        |       |_____] __|__".colorize(:white)     
+          puts "\n    ------------------------------".colorize(:red)
+          puts "         ~~~ WANTED LISTS ~~~  ".colorize(:white)
+          puts "****************************************\n".colorize(:blue)
      end
 
+     def about
+          saying = "At Most Wanted, you can view information about all the individuals that the FBI are looking for. \nUse the prompts to navigate through the different offenders and victims."
+          count = 0
+          saying.split(' ').each {|word|
+               if count > 40 
+                    count = 0
+                    puts " "
+               elsif count == -1
+                    puts "\n\n"
+                    count = 0
+               end
+
+               print "#{word} "
+
+               if word.include?(".") 
+                    count = -1
+               else
+                    count += (word.length + 1) 
+               end
+
+               sleep(0.2)
+          }
+     end
 
      def list_main_menu
+
+          puts "\n________________________________________".colorize(:red) 
+          puts "_  _ ____ _ _  _    _  _ ____ _  _ _  _".colorize(:blue)     
+          puts "|\\/| |__| | |\\ |    |\\/| |___ |\\ | |  |".colorize(:blue) 
+          puts "|  | |  | | | \\|    |  | |___ | \\| |__|".colorize(:blue)
+          puts "________________________________________\n".colorize(:red) 
+
+
           TYPES.each_with_index do |type, i|
-               puts "#{i+1}. #{type}"
+               puts "   #{i+1}".colorize(:green) + ". #{type}"
           end
-          puts "\n [exit] to leave the Most Wanted List"
+          puts "\n [" + "exit".colorize(:green) + "] to leave the Most Wanted List"
      end
 
      def user_selection
-          puts "\nEnter the number to view the list..."
-          user_input = gets.strip
+          puts "\nEnter the select to view more info..."
+          user_input = gets.strip.colorize(:light_blue ).colorize( :background => :red)
           input_idx = user_input.to_i
           if input_idx > 0 && user_input != 'exit'
                case input_idx
@@ -35,6 +72,8 @@ TYPES = ['Murder','Crimes Against Children','Cyber','White Collar Crimes','Count
                     list_wanted
                when 2..TYPES.size
                     puts "You choose: #{TYPES[input_idx -1]}"
+               else
+                    adios
                end
           elsif user_input == 'exit'
                adios
