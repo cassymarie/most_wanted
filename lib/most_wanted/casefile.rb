@@ -4,7 +4,7 @@ class CaseFile
 extend Wanted::ClassMethods
 include Wanted::InstanceMethods
 
-@@attr = ["individual", "additional_information", "caution", "description", "details", "field_offices", "files", "images", "remarks", "possible_countries", "possible_states", "reward_max", "reward_text", "subjects", "url", "warning_message"]
+@@attr = ["individual", "additional_information", "caution", "description", "details", "files", "images", "remarks", "possible_countries", "possible_states", "reward_max", "reward_text", "field_offices", "subjects", "url", "warning_message"]
 attr_accessor :category
 
 @@all = []
@@ -17,18 +17,13 @@ attr_accessor :category
           @@all
      end
 
-     # def self.make_word_upcase(words)
-     #      words.gsub(/\w+/) {|word| word.capitalize}
-     # end
-
      def individual=(person)
           @individual = person.class != Person ? nil : person
      end
 
-
      def categorize(person)
           extrct = File.dirname(person.path).match(/wanted\/(.*)/)[1]
-          Api::CATEGORIES.each {|key,value|
+          Api.category_paths.each {|key,value|
                if extrct.include?(key.to_s)
                     return value
                end
@@ -51,8 +46,6 @@ attr_accessor :category
                puts "I'm sorry, that city is not listed"
           end
      end
-
-     
 
      def self.find_by_category(list)
           self.all.select do |file|

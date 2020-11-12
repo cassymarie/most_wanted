@@ -1,23 +1,32 @@
 class Api
 
-CATEGORIES = {
-     cac:'Crimes Against Children', 
-     counterintelligence:'Counterintelligence', 
-     cei:'Criminal Enterprise Investigations', 
-     cyber: 'Cyber', 
-     dt: 'Domestic Terrorism', 
-     ecap: 'Endangered Child Alert Program', 
-     human: 'Human Trafficking', 
-     kidnap: 'Kidnapping/Missing Persons', 
-     robbers: 'Known Bank Robbers',
-     assistance: 'Law Enforcement Assistance', 
-     murders: 'Murders', 
-     parental: 'Parental Kidnappings', 
-     seeking: 'Seeking Info', 
-     terror: 'Terrorism', 
-     topten: 'Top Ten', 
-     vicap: 'Violent Criminal Apprehension Program', 
-     wcc: 'White Collar Crimes'}
+TOPICS = {
+     topten: 'Top Ten',
+     fugitives: {
+          cac:'Crimes Against Children',
+          murders: 'Murders',
+          cyber: 'Cyber',
+          wcc: 'White Collar Crimes',
+          counterintelligence:'Counterintelligence',
+          cei:'Criminal Enterprise Investigations',
+          human: 'Human Trafficking',
+          additional: "Additional Violent Crimes"},
+     terrorism: {
+          terrorinfo: 'Seeking Info - Terrorism',
+          wanted_terr: 'Most Wanted Terrorist',
+          dt: 'Domestic Terrorism'},
+     seeking_Info: {
+          seeking: 'Seeking Info',
+          assistance: 'Law Enforcement Assistance'},
+     kidnap: 'Kidnapping/Missing Persons',
+     others: {
+          vicap: 'Violent Criminal Apprehension Program',
+          parental: 'Parental Kidnappings',
+          robbers: 'Known Bank Robbers',
+          ecap: 'Endangered Child Alert Program'},
+     search_by: ['City Field Office','Highest Reward',"Random Wanted"]
+}
+
 
 @@default_api_wanted = "https://api.fbi.gov/@wanted"
 @@total = 0
@@ -39,7 +48,7 @@ CATEGORIES = {
      end
 
      def create_objects
-          total_pages = ((@@total/20.0)/2.0).ceil
+          total_pages = ((@@total/20.0)).ceil
           page = 1
           while page <= total_pages do 
                page_parse(page)["items"].each do |criminal|
@@ -51,6 +60,35 @@ CATEGORIES = {
                end
                page += 1
           end
+     end
+
+     def self.open(url)
+          
+          system("open", url)
+     end
+
+     def self.main_topics
+          TOPICS.collect do |k,v|
+               if v.class == String 
+                    v
+               else  
+                    (k.to_s).gsub("_"," ").capitalize 
+               end
+          end
+     end
+
+     def self.category_paths
+          paths = {}
+          TOPICS.each do |k,v|
+               if v.class == String
+                    paths[k] = v
+               elsif v.class == Hash
+                    v.each do |k,v|
+                         paths[k] = v
+                    end
+               end
+          end
+          paths
      end
 
 

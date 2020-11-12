@@ -20,35 +20,14 @@ class Person
           @@attr
      end
 
-     # def make_word_upcase(words)
-     #      words.gsub(/\w+/) {|word| word.capitalize}
-     # end
-
      def name_title
           make_word_upcase(self.title)
      end
 
-     # def self.categories
-     #      extrct = File.dirname(self.path).match(/wanted\/(.*)/)[1]
-     #      extrct.gsub!("-"," ")
-     #      # make_words_upcase(extrct)
-     #      self.classifications = make_words_upcase(extrct)
-     # end
-
-
-
-     # def self.list_category(cat)
-     #      self.all.select do |person|
-     #           person.classification == cat
-     #      end
-     # end
-
-     # def self.list_classifications
-     #      self.all.collect{|person|person.classification}.uniq
-     # end
-
-     
-
+     def self.my_attributes
+          
+     end
+    
      def self.list_names
           self.all.collect do |person|
                person.name
