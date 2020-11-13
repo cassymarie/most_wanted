@@ -1,5 +1,5 @@
 class Api
-
+include Formatting
 TOPICS = {
      topten: 'Top Ten',
      fugitives: {
@@ -15,16 +15,16 @@ TOPICS = {
           terrorinfo: 'Seeking Info - Terrorism',
           wanted_terr: 'Most Wanted Terrorist',
           dt: 'Domestic Terrorism'},
-     seeking_Info: {
+     seeking_info: {
           seeking: 'Seeking Info',
           assistance: 'Law Enforcement Assistance'},
-     kidnap: 'Kidnapping/Missing Persons',
+     kidnap: 'Kidnap/Missing Persons',
      others: {
           vicap: 'Violent Criminal Apprehension Program',
           parental: 'Parental Kidnappings',
           robbers: 'Known Bank Robbers',
           ecap: 'Endangered Child Alert Program'},
-     search_by: ['City Field Office','Highest Reward',"Random Wanted"]
+     search_by: ['City Field Office',"Random Case","Total Cases"]
 }
 
 
@@ -62,8 +62,7 @@ TOPICS = {
           end
      end
 
-     def self.open(url)
-          
+     def self.open(url)       
           system("open", url)
      end
 
@@ -75,6 +74,11 @@ TOPICS = {
                     (k.to_s).gsub("_"," ").capitalize 
                end
           end
+     end
+
+     def self.sub_topics(topic)
+          sub_key = topic.downcase.gsub(" ","_").to_sym
+          TOPICS[sub_key].collect {|key,value| value} 
      end
 
      def self.category_paths

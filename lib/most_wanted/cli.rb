@@ -4,113 +4,116 @@ class MostWanted::CLI
      include Formatting
 
      def start
-          # title_header(TITLES.fbi,)
+          clear
           fbi_title
           about
           Api.new
           # binding.pry
-          list_main_menu
-          user_selection
+          display_main_menu
      end
 
-
      def about
-          saying = "At Most Wanted, you can view information about all the individuals that the FBI are looking for. Use the prompts to navigate through the different offenders and victims."
+          saying = "At Most Wanted, you can view information about all the individuals that the FBI are looking for. Use the keys listed to navigate through the different offenders and victims."
           count = 0
-          saying.split(' ').each {|word|
 
-               if count > PROFILE_WIDTH || (count + word.length) > PROFILE_WIDTH 
+          saying.split(' ').each do |word|
+
+               if count > PROFILE_WIDTH || (count + word.length) > PROFILE_WIDTH || count == -1
                     count = 0
                     puts " "
-               elsif count == -1
-                    puts "\n\n"
-                    count = 0
                end
 
-               if word == 'prompts'  
-                    print "#{word} ".green
-               else
-                    print "#{word} "
-               end
+               word == 'keys' ? print("#{word} ".green) : print("#{word} ")
+
+               count += (word.length + 1) 
+               # sleep(0.25)
 
                if word.include?(".") 
                     count = -1
-                    # sleep(0.75)
-               else
-                    count += (word.length + 1) 
-                    # sleep(0.25)
+                    puts ""
+                    # sleep(0.5)
                end
-          }
-          # puts ""
+          end
      end
 
-     def list_main_menu
+     def display_main_menu(clear_screen = false)
+          clear if clear_screen
           title_header(TITLES[:main_menu],"_","-",false)
 
           Api.main_topics.each_with_index do |type, i|
+               puts "#{(" " * (PROFILE_SIDE / 2))}#{i+1}".green + ". #{type}"        
+          end
+
+          puts "\n NAVIGATE: ".black.on_green + " #{nav_main}".on_black
+          input_menu
+     end
+
+     def display_sub_menu(topic)
+          clear     
+          key = topic_key(topic)
+
+          #creates title
+          title_header(TITLES[key],"~",".",true)
+          puts ""
+
+          #numbered list - second level
+          Api.sub_topics(topic).each_with_index do |type, i|
                puts "   #{i+1}".green + ". #{type}"
           end
 
-          puts "\n [" + "exit".green + "] to leave the Most Wanted List"
+          puts "\n NAVIGATE: ".black.on_green + " #{nav_main(topic)}".on_black
+          input_menu(topic)
      end
 
-     def user_selection
-          puts "\nEnter the select to view more info..."
-          user_input = gets.strip
-          input_idx = user_input.to_i
+     def display_profile(topic, title, idx = 1, sub_heading = nil)
 
-          if input_idx > 0 && user_input != 'exit'
-               
-               topic = Api.main_topics[input_idx-1].to_s
-               title_key = Api::TOPICS.key(topic)
-               display_profile(topic,TITLES[title_key])
-               
-          elsif user_input == 'exit'
-               adios
-          end
-     end
+          title_header(title, "~", ".", true)
+          puts text_format_display(sub_heading).white.on_blue.bold unless sub_heading.nil?
 
-     def display_recordbar(topic,idx = 1, total)
-          if topic == "Top Ten"
-               bar = "VIEWING: #{idx} of #{total}"
+          if sub_heading.nil? 
+               search_category = topic
           else
-               bar = "TOTAL: #{total} #{topic}  |  VIEWING: #{idx} of #{total}"
+               search_category = sub_heading
           end
-          puts "#{text_format_display(bar,"mid")}\n".black.on_light_blue  
-     end
 
-     def display_profile(topic,title,idx = 1)
-          title_header(title,"~",".",true)
-          search_arr = CaseFile.find_by_category(topic)
+          search_arr = CaseFile.find_by_category(search_category)
+
           total = search_arr.compact.size
           display_idx = idx - 1
 
-          if total == 0
-               puts " Good News!!! There are 0 #{topic} Profiles to display"
-               sleep(2.0)
-               list_main_menu
+          if total == 0 || idx > total
+
+               saying = "Good News!!! There are 0 #{search_category} Profiles to display" if total == 0
+               saying = "You have reached the End of the #{search_category} Profiles." if idx > total
+
+               puts ""
+               puts "#{text_format_display(saying)}\n\n".red.bold
+               puts ""
+               sleep(2.5)
+
+               search_category == topic ? display_main_menu(true) : display_sub_menu(topic)
+
           else 
-               display_recordbar(topic,idx,total)
+
+               display_recordbar(search_category,idx,total)
+
                person = search_arr[display_idx].individual
                casefile = search_arr[display_idx]
                warning = casefile.warning_message
-               puts "#{text_format_display(warning)}\n".light_white.on_red.bold.blink unless warning.nil?
 
+               puts "#{text_format_display(warning)}".light_white.on_red.bold unless warning.nil?
                person_display(person)
                casefile_display(casefile)
 
-               puts "#{nav_menu(idx, total, casefile)}"
+               puts "\n NAVIGATE: ".black.on_green + " #{nav_profile(idx, total, casefile, topic, sub_heading)}".on_black
+               input_profile(topic, idx, sub_heading, casefile)
           end  
-
-          
      end
 
      def person_display(person)
-          hide_info = ['aliases','path','uid','title']
+          hide_info = ['path','uid','title']
           
-          puts "#{title_label(person.title)}".red.on_light_white
-          puts "#{text_format_display(wrap_text_profile(person.aliases))}".red.on_light_white.italic
-          puts ""
+          puts "#{title_label(person.title)}\n".red.on_light_white
 
           person.instance_variables.each do |att_name|
                label = att_name.match(/([^@]\w*)/)[1]
@@ -119,7 +122,6 @@ class MostWanted::CLI
           end
           
           puts ""
-
      end
      
      def casefile_display(casefile)
@@ -131,74 +133,139 @@ class MostWanted::CLI
                if !value.nil? && !hide_info.include?(label) && value != 0
                     label = label.upcase.gsub("_"," ")
                     case label
-                    when 'CAUTION'
+                    when 'CAUTION', 'REMARKS'
                          puts "#{text_format_display(label)}".light_white.on_red.bold
                          puts wrap_text_profile(value)
                     else
-                         puts "#{left_side_profile(label,"right")}".black.on_light_red + "#{right_side_profile(value)}"
+                         label = "ADDITIONAL INFO" if label == "ADDITIONAL INFORMATION"
+                         puts "#{left_side_profile(label,"left")}".black.on_light_red + "#{right_side_profile(value)}"
                     end
                     puts ""
                end
           end
      end
 
+     def display_recordbar(topic,idx=1, total)
+          if topic == "Top Ten"
+               bar = "VIEWING: #{idx} of #{total}"
+          else
+               bar = "TOTAL: #{total} #{topic}  |  VIEWING: #{idx} of #{total}"
+          end
+          puts "#{text_format_display(bar,"mid")}\n".black.on_light_blue  
+     end
 
-     def nav_options(page=1,topic)  
-          options = ['next','prev','menu','exit']
-          puts "\n Navigate: [next] Next 20, [prev] Prev 20, [menu] main menu, [exit] exit"
-          user_input = gets.strip
-          if options.include?(user_input)
-               case user_input
-               when 'next'
-                    list_wanted((page + 1),topic)
-               when 'prev'
-                    if page == 1 
-                         puts "going back to main menu"
+     def input_menu(topic = "main", sub_heading = nil)
+          user_input = ""
+
+          #(Loop) Valid input received
+          until valid_menu?(user_input, topic) do
+               print "\n Type Option: ".green 
+               print "  "
+               user_input = gets.strip.downcase
+          end
+
+          if user_input == 'menu'
+               clear
+               fbi_title
+               display_main_menu
+           end
+
+          title_goodbye if user_input == 'exit'
+
+          input_idx = user_input.to_i
+          if input_idx > 0    #MAIN MENU / SUB-MENU INPUT (NUMBER ONLY)
+               if topic == "main"
+                    topic = Api.main_topics[(input_idx - 1)].to_s
+                    case input_idx
+                    when 1
+                         display_profile(topic,TITLES[:topten],1)
+                    when 5
+                         key = Api::TOPICS.key(topic)
+                         display_profile(topic,TITLES[key],1)
                     else
-                         list_wanted(page =+1,topic)
+                         display_sub_menu(topic)
                     end
-               when 'menu'
-                    welcome
-               when 'exit'
-                    adios
-               else
-                    welcome
+               else  #sub-menu / next list (number selection)
+                    sub_topic = Api.sub_topics(topic)[input_idx - 1]
+                    display_profile(topic, TITLES[topic_key(topic)], 1, sub_topic)
                end
           end
      end
 
-     
-     def nav_menu(cur_record = 1, total, obj)
+     def input_profile(topic, idx = 1, sub_topic = nil, casefile = nil)
+          user_input = ""
 
-          puts "#{text_format_display("NAVIGATE: ","left")}".black.on_green
+          until valid_profile?(user_input, topic, idx, sub_topic, casefile) do
+               print "\n Type Option: ".green 
+               print "  "
+               user_input = gets.strip.downcase
+          end
+
+               key = topic_key(topic) 
+               key = :topten if topic == 'Top Ten'
+               key = :kidnap if topic == 'Kidnap/Missing Persons'
+
+               case user_input
+               when 'n'
+                    display_profile(topic,TITLES[key], (idx + 1), sub_topic)
+               when 'p'
+                    display_profile(topic,TITLES[key], (idx - 1), sub_topic)
+               when 'view'
+                    system("open", casefile.url)
+                    input_profile(topic, idx, sub_topic, casefile)
+               when 'back'
+                    display_sub_menu(topic)
+               when 'menu'
+                    clear
+                    fbi_title
+                    display_main_menu
+               when 'exit'
+                    title_goodbye
+               else
+                    clear
+                    fbi_title
+                    display_main_menu
+               end
+
+     end
+
+     def valid_menu?(input, topic = "main")
+          valid = false
+          text_entry = ['exit','menu']
+
+          valid = text_entry.any?(input)
+
+          max_num = case topic
+                    when 'main'
+                         Api.main_topics.count
+                    else
+                         Api.sub_topics(topic).count
+                    end
+
+          input_num = input.to_i          
+          valid = true if input_num > 0 && input_num <= max_num 
+          valid
+     end
+
+     def valid_profile?(input, topic, idx = 1, sub_topic = nil, casefile)
+          valid = false
+          text_entry = ['exit','menu','back','view','n','p']
           
-          prev_rec = ""
-          prev_rec = "[" + "<".green + "] Previous Record  " unless cur_record == 1
+          if input.length == 1 && input == 'n' || input == 'p'
+               if topic == 'Top Ten' || topic == 'Kidnap/Missing Persons'
+                    max_num = CaseFile.category_total(topic)
+               else
+                    max_num = CaseFile.category_total(sub_topic)
+               end           
 
-          next_rec = ""
-          next_rec = "[" + ">".green + "] Next Record  " unless cur_record == total
-          
-          view_url = ""
-          view_url = "[" + "view".green + "] View more Info  " unless obj.url.nil?
-
-          menu = "[" + "menu".green + "] Back to Menu  "
-          exit_cli = "[" + "exit".green + "] Exit Program"
-
-          wrap_text_profile("#{prev_rec}#{next_rec}#{view_url}#{menu}#{exit_cli}")
+               valid = true if input == 'n' && max_num >= idx
+               valid = true if input == 'p' && idx != 1
+               
+          elsif input.length > 1 && text_entry.include?(input)
+               valid = true if input == 'back' && !sub_topic.nil?
+               valid = true if input == 'exit' || input == 'menu'
+               valid = true if input == 'view' && !casefile.url.nil?
+          end
+          valid
      end
-
-     def nav_profile()
-
-     end
-
-
-
-     def adios
-          puts "\nSee you on the flip side."
-     end
-
-
-
-
-
 end

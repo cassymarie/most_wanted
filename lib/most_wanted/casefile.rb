@@ -4,7 +4,7 @@ class CaseFile
 extend Wanted::ClassMethods
 include Wanted::InstanceMethods
 
-@@attr = ["individual", "additional_information", "caution", "description", "details", "files", "images", "remarks", "possible_countries", "possible_states", "reward_max", "reward_text", "field_offices", "subjects", "url", "warning_message"]
+@@attr = ["individual", "additional_information", "caution", "remarks", "description", "details", "files", "images",  "possible_countries", "possible_states", "reward_max", "reward_text", "field_offices", "subjects", "url", "warning_message"]
 attr_accessor :category
 
 @@all = []
@@ -51,6 +51,10 @@ attr_accessor :category
           self.all.select do |file|
                file.category == list
           end
+     end
+
+     def self.category_total(category)
+          self.find_by_category(category).count
      end
 
 end

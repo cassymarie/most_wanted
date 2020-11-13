@@ -6,7 +6,7 @@ class Person
      extend Wanted::ClassMethods
      include Wanted::InstanceMethods
 
-@@attr = ["age", "aliases", "build", "dates_of_birth", "eyes", "hair", "height", "languages", "name", "nationality", "occupations", "path", "place_of_birth", "race", "scars_and_marks", "sex", "status", "title", "uid", "weight"] 
+@@attr = ["age", "build", "dates_of_birth", "eyes", "hair", "height", "languages", "name", "aliases", "nationality", "occupations", "path", "place_of_birth", "race", "scars_and_marks", "sex", "status", "title", "uid", "weight"] 
 
 @@all = []
 
