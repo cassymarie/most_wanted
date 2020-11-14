@@ -19,6 +19,7 @@ module Wanted
                self.class.setup_attributes.each do |attr|
           
                     self.class.attr_accessor(attr.to_sym)
+
                     attr2 = case attr
                          when "age","weight","height"
                               "_max"
@@ -27,8 +28,10 @@ module Wanted
                          else
                               ""
                     end
+
                     self.send(("#{attr}="), fbi_hash["#{attr}#{attr2}"])
                end
+               
                self.class.all << self
           end
           

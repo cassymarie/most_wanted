@@ -1,5 +1,5 @@
 module Formatting
-PROFILE_WIDTH = 120
+PROFILE_WIDTH = 100
 PROFILE_SIDE = 20
 TITLES = {
      fbi: ['######## ########  ####','##       ##     ##  ## ','##       ##     ##  ## ','######   ########   ## ','##       ##     ##  ## ','##       ##     ##  ## ','##       ########  ####'],
@@ -44,46 +44,10 @@ TITLES = {
           puts "\n\n#{text_format_display("Thank you for visiting the FBIs Most Wanted. Stay Safe!!")}\n\n".red.bold
      end
      
-     # Navigation Bars - Keys shown green
-     #--------------------------------------
-     def nav_main(topic = "main")
-          main = ""
-          back = ""
-          profile = "[" + "\#".green + "] View Profiles  "
-          exit_cli = "[" + "exit".green + "] Exit Program  "
-          if topic != 'main'
-               back =  "[" + "menu".green + "] Main Menu  " if topic != "Top Ten" || topic != "kidnapped"
-               # profile = "[" + "\#".green + "] View Profiles  "
-          else
-               main =  "[" + "menu".green + "] Main Menu  " if topic != "main"
-          end
-          "#{profile}#{back}#{main}#{exit_cli}"
-     end
-
-     def nav_profile(cur_record = 1, total, obj, topic, sub_heading)
-          # HIDES/SHOWS OPTIONS BASED ON RECORD BEING VIEWED
-          prev_rec = ""
-          next_rec = ""
-          view_url = ""
-          back = ""
-
-          prev_rec = "[" + "p".green + "] Previous  " unless cur_record == 1
-          next_rec = "[" + "n".green + "] Next  " unless cur_record == total
-          view_url = "[" + "view".green + "] View Files  " unless obj.url.nil?
-          back = "[" + "back".green + "] #{topic} Menu  " unless sub_heading.nil?
-          menu = "[" + "menu".green + "] Main Menu  "
-          exit_cli = "[" + "exit".green + "] Exit Program"
-
-          "#{prev_rec}#{next_rec}#{view_url}#{back}#{menu}#{exit_cli}"
-     end
-
-     # Formatting Text
+# Formatting Text
      #--------------------
      def topic_key(topic)
           topic.downcase.gsub(" ","_").to_sym
-     end
-
-     def sub_category_key()
      end
 
      def text_format_display(display_text, align = "center", padding = 1, space_char = " ")

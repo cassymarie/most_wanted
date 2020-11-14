@@ -1,5 +1,6 @@
 class Api
-include Formatting
+# include Formatting
+
 TOPICS = {
      topten: 'Top Ten',
      fugitives: {
@@ -27,17 +28,12 @@ TOPICS = {
      search_by: ['City Field Office',"Random Case","Total Cases"]
 }
 
-
 @@default_api_wanted = "https://api.fbi.gov/@wanted"
 @@total = 0
 
      def initialize
           @@total = page_parse["total"]
           create_objects
-     end
-
-     def self.total 
-          @@total
      end
 
      def page_parse(page_num = 1)
@@ -62,8 +58,8 @@ TOPICS = {
           end
      end
 
-     def self.open(url)       
-          system("open", url)
+     def self.total 
+          @@total
      end
 
      def self.main_topics
@@ -94,6 +90,5 @@ TOPICS = {
           end
           paths
      end
-
 
 end

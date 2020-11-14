@@ -8,12 +8,11 @@ class MostWanted::CLI
           fbi_title
           about
           Api.new
-          # binding.pry
           display_main_menu
      end
 
      def about
-          saying = "At Most Wanted, you can view information about all the individuals that the FBI are looking for. Use the keys listed to navigate through the different offenders and victims."
+          saying = "Welcome to FBI's Most Wanted.  Users can view the profile information about the individuals that the FBI are looking for based on the different crime categories.  Use the keys listed to navigate through the menus, and profiles of the offenders and victims."
           count = 0
 
           saying.split(' ').each do |word|
@@ -26,16 +25,17 @@ class MostWanted::CLI
                word == 'keys' ? print("#{word} ".green) : print("#{word} ")
 
                count += (word.length + 1) 
-               # sleep(0.25)
+               sleep(0.25)
 
                if word.include?(".") 
                     count = -1
                     puts ""
-                    # sleep(0.5)
+                    sleep(0.5)
                end
           end
      end
 
+     #Display Menus & Profile
      def display_main_menu(clear_screen = false)
           clear if clear_screen
           title_header(TITLES[:main_menu],"_","-",false)
@@ -154,6 +154,7 @@ class MostWanted::CLI
           puts "#{text_format_display(bar,"mid")}\n".black.on_light_blue  
      end
 
+     #User input menu/profile - Valid checke
      def input_menu(topic = "main", sub_heading = nil)
           user_input = ""
 
@@ -206,25 +207,25 @@ class MostWanted::CLI
                key = :kidnap if topic == 'Kidnap/Missing Persons'
 
                case user_input
-               when 'n'
-                    display_profile(topic,TITLES[key], (idx + 1), sub_topic)
-               when 'p'
-                    display_profile(topic,TITLES[key], (idx - 1), sub_topic)
-               when 'view'
-                    system("open", casefile.url)
-                    input_profile(topic, idx, sub_topic, casefile)
-               when 'back'
-                    display_sub_menu(topic)
-               when 'menu'
-                    clear
-                    fbi_title
-                    display_main_menu
-               when 'exit'
-                    title_goodbye
-               else
-                    clear
-                    fbi_title
-                    display_main_menu
+                    when 'n'
+                         display_profile(topic,TITLES[key], (idx + 1), sub_topic)
+                    when 'p'
+                         display_profile(topic,TITLES[key], (idx - 1), sub_topic)
+                    when 'view'
+                         system("open", casefile.url)
+                         input_profile(topic, idx, sub_topic, casefile)
+                    when 'back'
+                         display_sub_menu(topic)
+                    when 'menu'
+                         clear
+                         fbi_title
+                         display_main_menu
+                    when 'exit'
+                         title_goodbye
+                    else
+                         clear
+                         fbi_title
+                         display_main_menu
                end
 
      end
