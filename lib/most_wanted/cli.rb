@@ -165,13 +165,13 @@ class MostWanted::CLI
                user_input = gets.strip.downcase
           end
 
+          title_goodbye if user_input == "exit"
+
           if user_input == 'menu'
                clear
                fbi_title
                display_main_menu
            end
-
-          title_goodbye if user_input == 'exit'
 
           input_idx = user_input.to_i
           if input_idx > 0    #MAIN MENU / SUB-MENU INPUT (NUMBER ONLY)
@@ -202,9 +202,13 @@ class MostWanted::CLI
                user_input = gets.strip.downcase
           end
 
+          # title_goodbye if user_input == "exit"
+
                key = topic_key(topic) 
                key = :topten if topic == 'Top Ten'
                key = :kidnap if topic == 'Kidnap/Missing Persons'
+               
+               display_profile(topic,TITLES[key], (user_input.to_i), sub_topic) unless user_input.to_i == 0
 
                case user_input
                     when 'n'
@@ -222,10 +226,10 @@ class MostWanted::CLI
                          display_main_menu
                     when 'exit'
                          title_goodbye
-                    else
-                         clear
-                         fbi_title
-                         display_main_menu
+                    # else
+                    #      clear
+                    #      fbi_title
+                    #      display_main_menu
                end
 
      end
@@ -251,14 +255,16 @@ class MostWanted::CLI
      def valid_profile?(input, topic, idx = 1, sub_topic = nil, casefile)
           valid = false
           text_entry = ['exit','menu','back','view','n','p']
+          input_num = input.to_i
           
-          if input.length == 1 && input == 'n' || input == 'p'
-               if topic == 'Top Ten' || topic == 'Kidnap/Missing Persons'
-                    max_num = CaseFile.category_total(topic)
-               else
-                    max_num = CaseFile.category_total(sub_topic)
-               end           
+          if topic == 'Top Ten' || topic == 'Kidnap/Missing Persons'
+               max_num = CaseFile.category_total(topic)
+          else
+               max_num = CaseFile.category_total(sub_topic)
+          end  
 
+          if input.length == 1 && input == 'n' || input == 'p'
+     
                valid = true if input == 'n' && max_num >= idx
                valid = true if input == 'p' && idx != 1
                
@@ -266,6 +272,8 @@ class MostWanted::CLI
                valid = true if input == 'back' && !sub_topic.nil?
                valid = true if input == 'exit' || input == 'menu'
                valid = true if input == 'view' && !casefile.url.nil?
+          elsif input_num = input.to_i > 0 && input_num <= max_num
+               valid = true
           end
           valid
      end

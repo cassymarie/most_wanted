@@ -1,6 +1,6 @@
 module Formatting
-PROFILE_WIDTH = 100
-PROFILE_SIDE = 20
+PROFILE_WIDTH = 125
+PROFILE_SIDE = 25
 TITLES = {
      fbi: ['######## ########  ####','##       ##     ##  ## ','##       ##     ##  ## ','######   ########   ## ','##       ##     ##  ## ','##       ##     ##  ## ','##       ########  ####'],
      main_menu: [' __  __   _   ___ _  _   __  __ ___ _  _ _   _ ','|  \/  | /_\ |_ _| \| | |  \/  | __| \| | | | |','| |\/| |/ _ \ | || .` | | |\/| | _|| .` | |_| |','|_|  |_/_/ \_\___|_|\_| |_|  |_|___|_|\_|\___/ '],
@@ -44,7 +44,7 @@ TITLES = {
           puts "\n\n#{text_format_display("Thank you for visiting the FBIs Most Wanted. Stay Safe!!")}\n\n".red.bold
      end
      
-          # Navigation Bars - Keys shown green
+     # Navigation Bars - Keys shown green
      #--------------------------------------
      def nav_main(topic = "main")
           main = ""
@@ -66,18 +66,20 @@ TITLES = {
           next_rec = ""
           view_url = ""
           back = ""
+          num = ""
 
           prev_rec = "[" + "p".green + "] Previous  " unless cur_record == 1
           next_rec = "[" + "n".green + "] Next  " unless cur_record == total
           view_url = "[" + "view".green + "] View Files  " unless obj.url.nil?
           back = "[" + "back".green + "] #{topic} Menu  " unless sub_heading.nil?
+          num = "[" + "1 - #{total}".green + "] Jump to Profile  " 
           menu = "[" + "menu".green + "] Main Menu  "
           exit_cli = "[" + "exit".green + "] Exit Program"
 
-          "#{prev_rec}#{next_rec}#{view_url}#{back}#{menu}#{exit_cli}"
+          "#{prev_rec}#{next_rec}#{num}#{view_url}#{back}#{menu}#{exit_cli}"
      end
      
-# Formatting Text
+     # Formatting Text
      #--------------------
      def topic_key(topic)
           topic.downcase.gsub(" ","_").to_sym
@@ -158,15 +160,4 @@ TITLES = {
           left_space = PROFILE_SIDE + 2
           wrap_text_profile(display_text, right_width, 2, PROFILE_SIDE)
      end
-
-
-
-
-
-
-
-
-
-
-
  end

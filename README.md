@@ -9,7 +9,6 @@ Welcome to the FBI's Most Wanted CLI.  Users can view the profile information ab
 3. Run `bundle install`
 4. Run `.\bin\most_wanted`
 
-
 ## Usage
 
 Most Wanted individuals are categorized by the crimes they are involved in.  The directory as seen below, the user enters the corresponding number to navigate through the menus to the individual profiles.
@@ -50,17 +49,19 @@ Once a category is chosen, navigate through the profiles using the keys listed a
 
 Entering `view` will take the user to the official FBI's Wanted poster.  
 
-View the Most Wanted [walkthrough video here](./video/walkthrough.mp4)
-
+View the Most Wanted [walkthrough video here](https://youtu.be/fBAqda1Efpw)
 
 ## Development
 
 All work has been completed on the `origin-master` branch.  Multiple commits have been made throughout the development of the app.  
 
 Future development ideas:  
-   - Create a list option for the profiles
-   - Loop through/update all the different profiles, based on city selection
 
+- Create a list option for the profiles
+- Enter in a number to jump to that profile
+- Loop through/update all the different profiles, based on city selection
+
+Most Wanted troubleshooting [video](https://youtu.be/-iylxiLdiPk)
 
 ## Contributing
 
@@ -68,11 +69,11 @@ Learn.co / Flatiron Phase 1 course topics have helped through most, if not all t
 
 Google has been an extreme help finding all the guidance needed at 2 am for easier method calls.  
 
-The following sites were a blessing to help with either the design or functionality for completion. 
+The following sites were a blessing to help with either the design or functionality for completion.
 
 [ASCII generator](http://www.network-science.de/ascii/) \| [Rubular](https://rubular.com/) \| [Ruby-docs/classes](https://ruby-doc.org/core-2.7.2/index.html#classes) \| [HTML tag removal](https://snippets.aktagon.com/snippets/192-removing-html-tags-from-a-string-in-ruby)
 
-Additionally, my husband helped with questions, best practices and some code reviews. 
+Additionally, my husband helped with questions, best practices and some code reviews.
 
 ## License
 
