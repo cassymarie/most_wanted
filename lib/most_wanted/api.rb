@@ -23,8 +23,7 @@ TOPICS = {
           vicap: 'Violent Criminal Apprehension Program',
           parental: 'Parental Kidnappings',
           robbers: 'Known Bank Robbers',
-          ecap: 'Endangered Child Alert Program'} #,
-     # search_by: ['City Field Office',"Random Case","Total Cases"]
+          ecap: 'Endangered Child Alert Program'}
 }
 
 @@default_api_wanted = "https://api.fbi.gov/@wanted"

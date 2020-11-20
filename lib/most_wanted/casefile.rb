@@ -5,6 +5,7 @@ extend Wanted::ClassMethods
 include Wanted::InstanceMethods
 
 @@attr = ["individual", "additional_information", "caution", "remarks", "description", "details", "files", "images",  "possible_countries", "possible_states", "reward_max", "reward_text", "field_offices", "subjects", "url", "warning_message"]
+
 attr_accessor :category
 
 @@all = []
@@ -47,9 +48,9 @@ attr_accessor :category
           end
      end
 
-     def self.find_by_category(list)
+     def self.find_by_category(topic)
           self.all.select do |file|
-               file.category == list
+               file.category == topic
           end
      end
 

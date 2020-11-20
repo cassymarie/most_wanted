@@ -193,6 +193,24 @@ class MostWanted::CLI
           end
      end
 
+     def valid_menu?(input, topic = "main")
+          valid = false
+          text_entry = ['exit','menu']
+
+          valid = text_entry.any?(input)
+
+          max_num = case topic
+                    when 'main'
+                         Api.main_topics.count
+                    else
+                         Api.sub_topics(topic).count
+                    end
+
+          input_num = input.to_i          
+          valid = true if input_num > 0 && input_num <= max_num 
+          valid
+     end
+
      def input_profile(topic, idx = 1, sub_topic = nil, casefile = nil)
           user_input = ""
 
@@ -232,24 +250,6 @@ class MostWanted::CLI
                     #      display_main_menu
                end
 
-     end
-
-     def valid_menu?(input, topic = "main")
-          valid = false
-          text_entry = ['exit','menu']
-
-          valid = text_entry.any?(input)
-
-          max_num = case topic
-                    when 'main'
-                         Api.main_topics.count
-                    else
-                         Api.sub_topics(topic).count
-                    end
-
-          input_num = input.to_i          
-          valid = true if input_num > 0 && input_num <= max_num 
-          valid
      end
 
      def valid_profile?(input, topic, idx = 1, sub_topic = nil, casefile)

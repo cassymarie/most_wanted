@@ -53,9 +53,8 @@ TITLES = {
           exit_cli = "[" + "exit".green + "] Exit Program  "
           if topic != 'main'
                back =  "[" + "menu".green + "] Main Menu  " if topic != "Top Ten" || topic != "kidnapped"
-               # profile = "[" + "\#".green + "] View Profiles  "
-          else
-               main =  "[" + "menu".green + "] Main Menu  " if topic != "main"
+          # else
+          #      main =  "[" + "menu".green + "] Main Menu  " if topic != "main"
           end
           "#{profile}#{back}#{main}#{exit_cli}"
      end
@@ -143,7 +142,7 @@ TITLES = {
      #--------------------------------------
      def left_side_profile(display_text, align = "center", padding = 1)
           spc1 = PROFILE_SIDE - display_text.length
-          spc2 = spc1/2
+          spc2 = spc1 / 2
           display = case align
           when "left"
                "#{(" " * padding)}#{display_text.upcase.gsub("_"," ")}#{(" " * (spc1 - padding))}"
@@ -160,4 +159,5 @@ TITLES = {
           left_space = PROFILE_SIDE + 2
           wrap_text_profile(display_text, right_width, 2, PROFILE_SIDE)
      end
+     
  end
